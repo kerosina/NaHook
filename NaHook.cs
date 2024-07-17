@@ -97,18 +97,11 @@ namespace Natrium
             if (Hooked)
                 throw new Exception("Already hooked");
             uint OldProtect;
-            List<byte> LOriginalBytes = new();
             IntPtr HookPointer = Marshal.GetFunctionPointerForDelegate(HookFnc);
             if (NaHook.VirtualProtect(JmpLocation, (UIntPtr)5, 0x40, out OldProtect))
             {
                 byte* p = (byte*)JmpLocation.ToPointer();
-
-                // Store the original bytes
-                for (int i = 0; i < 5; i++)
-                {
-                    LOriginalBytes.Add(p[i]);
-                }
-                OriginalFnc = LOriginalBytes.ToArray();
+                OriginalFnc = NaHook.GetBytes(JmpLocation, 5);
 
                 *p = 0xE9; // JMP
                 *(int*)(p + 1) = (int)(HookPointer.ToInt64() - JmpLocation.ToInt64() - 5);
