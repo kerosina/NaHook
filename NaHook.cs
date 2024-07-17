@@ -17,7 +17,9 @@ using System.Threading.Tasks;
 
 namespace Natrium
 {
-
+    /// <summary>
+    /// Class for managing hooks
+    /// </summary>
     public static class NaHook
     {
         [DllImport("kernel32.dll")]
@@ -35,29 +37,22 @@ namespace Natrium
         /// <param name="hook">Delegate of the hook</param>
         /// <param name="Identifier">Key for the entry in Hooks dictionary</param>
         /// <returns>Object representing hook</returns>
-        public static unsafe Hook<T> Hook<T>(IntPtr NativeFunction, T hook, string Identifier)
+        public static Hook<T> Hook<T>(IntPtr NativeFunction, T hook, string Identifier, bool AddToDict = true)
         {
             IntPtr HookPointer = Marshal.GetFunctionPointerForDelegate(hook);
-            uint OldProtect;
+            return new(HookPointer, hook, GetBytes(NativeFunction,5), Identifier);
+        }
+
+        public static unsafe byte[] GetBytes(IntPtr NativeFunction, int x)
+        {
             List<byte> LOriginalBytes = new();
             byte[] OriginalBytes;
-            if (VirtualProtect(NativeFunction, (UIntPtr)5, 0x40, out OldProtect))
+            byte* p = (byte*)NativeFunction.ToPointer();
+            for (int i = 0; i < 5; i++)
             {
-                byte* p = (byte*)NativeFunction.ToPointer();
-                for (int i = 0; i < 5; i++)
-                {
-                    LOriginalBytes.Add(p[i]);
-                }
-                OriginalBytes = LOriginalBytes.ToArray();
-                *p = 0xE9; // JMP
-                *(int*)(p + 1) = (int)(HookPointer.ToInt64() - NativeFunction.ToInt64() - 5);
-                VirtualProtect(NativeFunction, (UIntPtr)5, OldProtect, out _);
-                return new(NativeFunction, hook, OriginalBytes, Identifier);
+                LOriginalBytes.Add(p[x]);
             }
-            else
-            {
-                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
-            }
+            return LOriginalBytes.ToArray();
         }
     }
 
@@ -87,9 +82,9 @@ namespace Natrium
         public Hook(IntPtr jl, T hf, byte[] of, string identifier)
         {
             (JmpLocation, HookFnc, OriginalFnc, Identifier) = (jl, hf, of, identifier);
-            Hooked = true;
+            Rehook();
             if (NaHook.Hooks.ContainsKey(Identifier))
-                NaHook.Hooks[Identifier].Unhook();
+                NaHook.Hooks[Identifier].UnhookPerma();
             NaHook.Hooks.Add(Identifier, this);
         }
 
@@ -103,7 +98,6 @@ namespace Natrium
                 throw new Exception("Already hooked");
             uint OldProtect;
             List<byte> LOriginalBytes = new();
-            byte[] OriginalBytes;
             IntPtr HookPointer = Marshal.GetFunctionPointerForDelegate(HookFnc);
             if (NaHook.VirtualProtect(JmpLocation, (UIntPtr)5, 0x40, out OldProtect))
             {
@@ -114,7 +108,7 @@ namespace Natrium
                 {
                     LOriginalBytes.Add(p[i]);
                 }
-                OriginalBytes = LOriginalBytes.ToArray();
+                OriginalFnc = LOriginalBytes.ToArray();
 
                 *p = 0xE9; // JMP
                 *(int*)(p + 1) = (int)(HookPointer.ToInt64() - JmpLocation.ToInt64() - 5);
