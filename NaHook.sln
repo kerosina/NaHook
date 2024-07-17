@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NaHook", "NaHook.csproj", "{2EF81366-0891-48E9-95D9-F8FAD2B0EB79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EF81366-0891-48E9-95D9-F8FAD2B0EB79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF81366-0891-48E9-95D9-F8FAD2B0EB79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF81366-0891-48E9-95D9-F8FAD2B0EB79}.Debug|x86.ActiveCfg = Debug|x86
+		{2EF81366-0891-48E9-95D9-F8FAD2B0EB79}.Debug|x86.Build.0 = Debug|x86
+		{2EF81366-0891-48E9-95D9-F8FAD2B0EB79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF81366-0891-48E9-95D9-F8FAD2B0EB79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF81366-0891-48E9-95D9-F8FAD2B0EB79}.Release|x86.ActiveCfg = Release|x86
+		{2EF81366-0891-48E9-95D9-F8FAD2B0EB79}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0AF0B7C8-33EE-4ACA-A4E9-5AFDBC804FE9}
+	EndGlobalSection
+EndGlobal
